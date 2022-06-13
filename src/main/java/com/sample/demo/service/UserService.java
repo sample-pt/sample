@@ -6,16 +6,13 @@ import com.sample.demo.entity.getUserDetails;
 import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.cglib.core.Predicate;
 import org.springframework.stereotype.Service;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     Map<String, User> userDetails = new HashMap<>();
     Collection<User> val = userDetails.values();
-
-    List<User> list = new ArrayList<>(val);
-
     public Map<String, User> register(User user) {
 
         User user1 = new User();
@@ -83,7 +80,19 @@ public class UserService {
     }
 
 
-    public void search(String str){
+    public Collection<User> getAllUsers(){
+
+        return val;
+
+    }
+    public List<User> search( String str){
+
+
+          return  val.stream()
+                  .filter(c->c.getUserName().startsWith(str))
+//                  .filter(c->c.getUserId().startsWith(str))
+//                  .filter(c->c.getUserEmail().startsWith(str))
+                  .collect(Collectors.toList());
 
 
     }

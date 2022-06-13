@@ -10,6 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -43,12 +45,15 @@ public class UserController {
         return ResponseEntity.status(200).body(userDetails);
     }
 
-//    @GetMapping("/filter/{filter}")
-//    public Void filter(@RequestParam("str") String str){
-//
-//        userservice.search(str);
-//
-//    }
+    @GetMapping("/getAllUsers")
+    public Collection<User> filter(){
 
+         return userservice.getAllUsers();
+    }
 
+    @GetMapping("/getUserWithFilter/{str}")
+    public List<User> search( @PathVariable("str") @NotNull String str) {
+
+        return userservice.search(str);
+    }
 }
