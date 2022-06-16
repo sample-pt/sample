@@ -1,0 +1,7 @@
+
+jwt:
+  secret: saran123
+
+  spring:
+    main:
+      allow-circular-references: true

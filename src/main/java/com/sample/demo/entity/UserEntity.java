@@ -5,14 +5,13 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Entity
 @Validated
-public class User {
+public class UserEntity {
     @Id
     @Column
     @Size(min=2,max=4)
@@ -30,7 +29,7 @@ public class User {
     @Column
     public String password;
 
-    public User() {
+    public UserEntity() {
         this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
