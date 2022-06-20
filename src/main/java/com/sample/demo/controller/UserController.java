@@ -29,17 +29,14 @@ public class UserController {
     @Autowired
     UserService userservice;
 
-
-
+    @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
+    JWTUtility jwtUtility;
     @PostMapping("/authenticate")
-    public JwtResponse authenticate(@RequestBody UserLogin jwtRequest) throws Exception{
-        userservice.login1(jwtRequest);
-        return  userservice.login1(jwtRequest);
+    public String authenticate(@RequestBody @Valid JwtRequest jwtRequest) throws Exception {
+       return userservice.login1(jwtRequest);
     }
-
-
-
-
 
 
     @PostMapping(value = "/register",consumes = {MediaType.ALL_VALUE})
@@ -51,12 +48,12 @@ public class UserController {
         return ResponseEntity.status(201).body("User Registration was successful.");
     }
 
-    @PostMapping("/login")
-    public ResponseEntity< JwtResponse> login(  @RequestBody @Valid UserLogin userLogin) {
-
-        JwtResponse Response=userservice.login1(userLogin);
-        return ResponseEntity.status(200).body(Response);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity< JwtResponse> login(  @RequestBody @Valid UserLogin userLogin) throws Exception {
+//
+//        JwtResponse Response=userservice.login1(userLogin);
+//        return ResponseEntity.status(200).body(Response);
+//    }
 
     @PostMapping("/getUser")
     public ResponseEntity<UserEntity> getUser(@RequestBody @Valid getUserDetails user) {

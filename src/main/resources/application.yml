@@ -1,6 +1,6 @@
 
 jwt:
-  secret: saran123
+  secret: saran251
 
   spring:
     main:

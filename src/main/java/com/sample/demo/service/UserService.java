@@ -1,11 +1,9 @@
 package com.sample.demo.service;
 import java.util.*;
 
-import com.sample.demo.entity.JwtResponse;
-import com.sample.demo.entity.UserEntity;
-import com.sample.demo.entity.UserLogin;
-import com.sample.demo.entity.getUserDetails;
+import com.sample.demo.entity.*;
 import com.sample.demo.util.JWTUtility;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService{
 
     @Autowired
      JWTUtility jwtUtility;
@@ -28,7 +26,7 @@ public class UserService implements UserDetailsService {
      UserService userService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    AuthenticationManager authenticationManager;
 
     Map<String, UserEntity> userDetails = new HashMap<>();
     Collection<UserEntity> val = userDetails.values();
@@ -41,6 +39,7 @@ public class UserService implements UserDetailsService {
         userEntity1.setPassword(userEntity.getPassword());
         try {
             userDetails.put(userEntity1.getUserEmail(), userEntity1);
+
         } catch (Exception e) {
             System.out.println("Something went wrong.");
         }
@@ -49,65 +48,27 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
-        //Logic to get the user form the Database
-
-        return new User("admin","password",new ArrayList<>());
+           return new org.springframework.security.core.userdetails.User("saran25@gmail.com", "Saran25@", new ArrayList<>());
     }
-    public JwtResponse login1(UserLogin jwtRequest) {
-//        User user=userDetails.get()
 
-            if (userDetails.containsKey(jwtRequest.getEmail())) {
-                System.out.println("Login sucessfully");
-                try {
+    public String login1(JwtRequest jwtRequest) throws Exception {
+            try {
+                if (userDetails.containsKey(jwtRequest.getUsername())) {
+                    System.out.println("User is Exist");
                     authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(
-                                    jwtRequest.getEmail(),
-                                    jwtRequest.getPassword()
-                            )
+                            new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword())
                     );
-                } catch (BadCredentialsException e) {
-//                    throw new Exception("INVALID_CREDENTIALS", e);
                 }
-
-                final UserDetails userDetails
-                        = userService.loadUserByUsername(jwtRequest.getEmail());
-
-                final String token =
-                        jwtUtility.generateToken(userDetails);
-
-                return  new JwtResponse(token);
-
-//                String password = user.getPassword();
-//                String encryptedpassword = null;
-//                MessageDigest m = MessageDigest.getInstance("MD5");
-//
-//                m.update(password.getBytes());
-//
-//                byte[] bytes = m.digest();
-//
-//                StringBuilder s = new StringBuilder();
-//                for (int i = 0; i < bytes.length; i++) {
-//                    s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-//                }
-//
-//                encryptedpassword = s.toString();
-//                System.out.println("UserName: " + user.getEmail());
-//                System.out.println("Plain-text password: " + password);
-//                System.out.println("Encrypted password using MD5: " + encryptedpassword);
-//
+            }catch (Exception ex) {
+                throw new Exception("invalid username/password");
             }
-         else{
-            System.out.println("Email or password wrong");
-                return  new JwtResponse("Invalid credentials");
-        }
+            return jwtUtility.generateToken(jwtRequest.getUsername());
     }
-
-
 
 
     public UserEntity getUser(getUserDetails user) {
         try {
-            UserEntity userEntity3 =userDetails.get(user);
+//            UserEntity userEntity3 =userDetails.get(user);
             if (userDetails.containsKey(user.getUserEmail())) {
                 System.out.println("The UserId is Exist");
 
@@ -133,8 +94,6 @@ public class UserService implements UserDetailsService {
 
           return  val.stream()
                   .filter(c->c.getUserName().startsWith(str))
-//                  .filter(c->c.getUserId().startsWith(str))
-//                  .filter(c->c.getUserEmail().startsWith(str))
                   .collect(Collectors.toList());
 
 
